@@ -1,2 +1,7 @@
 Revision history for Test2-Tools-Expressive
 
+0.01_01 - 2016-08-22 21:59:02 CDT
+    - First basic version just to get it up on CPAN and getting checked by Travis.
+
+    [New features]
+    - Added the is_undef function.
