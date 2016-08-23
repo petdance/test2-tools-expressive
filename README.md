@@ -1,5 +1,10 @@
 # Test2::Tools::Expressive -- expressive tools for Perl's Test2 framework
 
+* Travis: [![Build Status](https://travis-ci.org/petdance/test2-tools-expressive.svg?branch=dev)](https://travis-ci.org/petdance/test2-tools-expressive)
+* cpantesters.org:
+[summary](http://www.cpantesters.org/distro/T/Test2-Tools-Expressive.html) and
+[dev FAILs](http://www.cpantesters.org/distro/T/Test2-Tools-Expressive.html?grade=3&perlmat=2&patches=2&oncpan=2&distmat=3&perlver=ALL&osname=ALL)
+
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
 example C compilers and installed libraries) and any other information
@@ -11,8 +16,7 @@ can use it to get an idea of the module's uses. It is usually a good idea
 to provide version information here so that people can decide whether
 fixes for the module are worth downloading.
 
-
-INSTALLATION
+# INSTALLATION
 
 To install this module, run the following commands:
 
@@ -21,7 +25,7 @@ To install this module, run the following commands:
     make test
     make install
 
-SUPPORT AND DOCUMENTATION
+# SUPPORT AND DOCUMENTATION
 
 After installing, you can find documentation for this module with the
 perldoc command.
@@ -43,7 +47,7 @@ You can also look for information at:
         http://search.cpan.org/dist/Test2-Tools-Expressive/
 
 
-LICENSE AND COPYRIGHT
+# LICENSE AND COPYRIGHT
 
 Copyright (C) 2016 Andy Lester
 
