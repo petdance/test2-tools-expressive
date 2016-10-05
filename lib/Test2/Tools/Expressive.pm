@@ -27,6 +27,7 @@ our @EXPORT_OK = qw(
 our @EXPORT = @EXPORT_OK;
 
 use Test2::API qw( context );
+use Test2::Tools::Explain;
 
 =head1 SYNOPSIS
 
@@ -116,11 +117,12 @@ sub is_empty_array {
     }
     elsif ( $ref ne 'ARRAY' ) {
         $ok = $ctx->ok( 0, $name );
-        $ctx->diag( "Expected ARRAY reference but got $ref" );
+        $ctx->diag( "Expected ARRAY reference but got $ref." );
     }
     elsif ( (my $n = @{$got}) > 0 ) {
         $ok = $ctx->ok( 0, $name );
-        $ctx->diag( "Array contains $n elements" );
+        my $s = $n == 1 ? '' : 's';
+        $ctx->diag( "Array contains $n element$s" );
         $ctx->diag( explain( $got ) );
     }
     else {
