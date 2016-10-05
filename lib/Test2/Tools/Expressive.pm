@@ -1,6 +1,6 @@
 package Test2::Tools::Expressive;
 
-use 5.006;
+use 5.008001;
 use strict;
 use warnings;
 
@@ -20,6 +20,8 @@ use parent 'Exporter';
 
 our @EXPORT_OK = qw(
     is_undef
+
+    is_empty_array
 );
 
 our @EXPORT = @EXPORT_OK;
@@ -40,6 +42,17 @@ based on the idea that reading English is easier and less prone to
 misinterpretation than reading Perl, and less prone to error by reducing
 common cut & paste tasks.
 
+The module's functions also provide diagnostics to make it easier to
+see why your test failed.  For example this test:
+
+    my $errors = try_something();
+    is_empty_array( $errors, 'Did errors come back empty?' );
+
+Gives this:
+
+    # Failed test 'Did errors come back empty?'
+    # at t/test.t line 37.
+    # Expected ARRAY reference but got HASH
 
 =head1 EXPORTS
 
@@ -59,7 +72,7 @@ with no parameters would pass.
 sub is_undef {
     my $nargs = scalar @_;
 
-    my $got = shift;
+    my $got  = shift;
     my $name = shift;
 
     my $ok;
@@ -77,6 +90,48 @@ sub is_undef {
 
     return $ok;
 }
+
+
+=head2 is_empty_array( $got [, $name ] )
+
+Verifies that C<$got> is an arrayref, and that the array it refers to
+has no elements.
+
+If the array contains anything, they will be dumped as a diagnostic
+using Test2::Tools::Explain.
+
+=cut
+
+sub is_empty_array {
+    my $got  = shift;
+    my $name = shift;
+
+    my $ok;
+    my $ctx = context();
+
+    my $ref = ref $got;
+    if ( $ref eq '' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Not a reference' );
+    }
+    elsif ( $ref ne 'ARRAY' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( "Expected ARRAY reference but got $ref" );
+    }
+    elsif ( (my $n = @{$got}) > 0 ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( "Array contains $n elements" );
+        $ctx->diag( explain( $got ) );
+    }
+    else {
+        $ok = $ctx->ok( 1, $name );
+    }
+
+    $ctx->release;
+
+    return $ok;
+}
+
 
 =head1 AUTHOR
 
