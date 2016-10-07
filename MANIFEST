@@ -4,6 +4,8 @@ Makefile.PL
 MANIFEST
 README.md
 t/00-load.t
+t/is_blank.t
+t/is_nonblank.t
 t/is_empty_array.t
 t/is_empty_hash.t
 t/is_nonempty_array.t

@@ -1,7 +1,8 @@
 Revision history for Test2-Tools-Expressive
 
-0.01_01 - 2016-08-22 21:59:02 CDT
-    - First basic version just to get it up on CPAN and getting checked by Travis.
+0.02 - 2016-10-06 23:43:12 CDT
+    - First basic version
 
     [New features]
-    - Added the is_undef function.
+    - Added first basic functions: is_undef, is_blank, is_nonblank,
+      is_empty_array, is_nonempty_array, is_empty_hash, is_nonempty_hash.
