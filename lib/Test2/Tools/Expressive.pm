@@ -22,6 +22,7 @@ our @EXPORT_OK = qw(
     is_undef
 
     is_empty_array
+    is_empty_hash
 );
 
 our @EXPORT = @EXPORT_OK;
@@ -123,6 +124,48 @@ sub is_empty_array {
         $ok = $ctx->ok( 0, $name );
         my $s = $n == 1 ? '' : 's';
         $ctx->diag( "Array contains $n element$s" );
+        $ctx->diag( explain( $got ) );
+    }
+    else {
+        $ok = $ctx->ok( 1, $name );
+    }
+
+    $ctx->release;
+
+    return $ok;
+}
+
+
+=head2 is_empty_hash( $got [, $name ] )
+
+Verifies that C<$got> is a hashref, and that the hash it refers to has
+no elements.
+
+If the hash contains any elements, they will be dumped as a diagnostic
+using Test2::Tools::Explain.
+
+=cut
+
+sub is_empty_hash {
+    my $got  = shift;
+    my $name = shift;
+
+    my $ok;
+    my $ctx = context();
+
+    my $ref = ref $got;
+    if ( $ref eq '' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Not a reference' );
+    }
+    elsif ( $ref ne 'HASH' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( "Expected HASH reference but got $ref." );
+    }
+    elsif ( (my $n = scalar keys %{$got}) > 0 ) {
+        $ok = $ctx->ok( 0, $name );
+        my $s = $n == 1 ? '' : 's';
+        $ctx->diag( "Hash contains $n element$s" );
         $ctx->diag( explain( $got ) );
     }
     else {
