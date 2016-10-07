@@ -21,6 +21,9 @@ use parent 'Exporter';
 our @EXPORT_OK = qw(
     is_undef
 
+    is_blank
+    is_nonblank
+
     is_empty_array
     is_nonempty_array
 
@@ -89,6 +92,75 @@ sub is_undef {
     }
     else {
         $ok = $ctx->ok( !defined $got, $name );
+    }
+
+    $ctx->release;
+
+    return $ok;
+}
+
+
+=head2 is_blank( $got [, $name ] )
+
+Verifies that C<$got> is a defined scalar, is not a reference and is an
+empty string.  Note that the string must be empty, so an all-whitespace
+string will fail.
+
+=cut
+
+sub is_blank {
+    my $got  = shift;
+    my $name = shift;
+
+    my $ok;
+    my $ctx = context();
+
+    my $ref = ref $got;
+    if ( $ref ne '' ) {
+        $ok = $ctx->ok( 0, $name );
+        my $article = ($ref =~ /^[AI]/) ? 'an' : 'a';
+        $ctx->diag( "Got $article $ref reference" );
+    }
+    elsif ( $got ne '' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Got a nonempty string' );
+    }
+    else {
+        $ok = $ctx->ok( 1, $name );
+    }
+
+    $ctx->release;
+
+    return $ok;
+}
+
+
+=head2 is_nonblank( $got [, $name ] )
+
+Verifies that C<$got> is a defined scalar, is not a reference and is
+not an empty string.
+
+=cut
+
+sub is_nonblank {
+    my $got  = shift;
+    my $name = shift;
+
+    my $ok;
+    my $ctx = context();
+
+    my $ref = ref $got;
+    if ( $ref ne '' ) {
+        $ok = $ctx->ok( 0, $name );
+        my $article = ($ref =~ /^[AI]/) ? 'an' : 'a';
+        $ctx->diag( "Got $article $ref reference" );
+    }
+    elsif ( $got eq '' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Got an empty string' );
+    }
+    else {
+        $ok = $ctx->ok( 1, $name );
     }
 
     $ctx->release;
