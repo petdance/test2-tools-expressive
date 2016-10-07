@@ -22,7 +22,10 @@ our @EXPORT_OK = qw(
     is_undef
 
     is_empty_array
+    is_nonempty_array
+
     is_empty_hash
+    is_nonempty_hash
 );
 
 our @EXPORT = @EXPORT_OK;
@@ -86,6 +89,43 @@ sub is_undef {
     }
     else {
         $ok = $ctx->ok( !defined $got, $name );
+    }
+
+    $ctx->release;
+
+    return $ok;
+}
+
+
+=head2 is_nonempty_array( $got [, $name ] )
+
+Verifies that C<$got> is an arrayref, and that the array contains at
+least one element.
+
+=cut
+
+sub is_nonempty_array {
+    my $got  = shift;
+    my $name = shift;
+
+    my $ok;
+    my $ctx = context();
+
+    my $ref = ref $got;
+    if ( $ref eq '' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Not a reference' );
+    }
+    elsif ( $ref ne 'ARRAY' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( "Expected ARRAY reference but got $ref." );
+    }
+    elsif ( !@{$got} ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Array contains no elements' );
+    }
+    else {
+        $ok = $ctx->ok( 1, $name );
     }
 
     $ctx->release;
@@ -167,6 +207,43 @@ sub is_empty_hash {
         my $s = $n == 1 ? '' : 's';
         $ctx->diag( "Hash contains $n element$s" );
         $ctx->diag( explain( $got ) );
+    }
+    else {
+        $ok = $ctx->ok( 1, $name );
+    }
+
+    $ctx->release;
+
+    return $ok;
+}
+
+
+=head2 is_nonempty_hash( $got [, $name ] )
+
+Verifies that C<$got> is a hashref, and that the hash contains at least
+one entry.
+
+=cut
+
+sub is_nonempty_hash {
+    my $got  = shift;
+    my $name = shift;
+
+    my $ok;
+    my $ctx = context();
+
+    my $ref = ref $got;
+    if ( $ref eq '' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Not a reference' );
+    }
+    elsif ( $ref ne 'HASH' ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( "Expected HASH reference but got $ref." );
+    }
+    elsif ( scalar keys %{$got} == 0 ) {
+        $ok = $ctx->ok( 0, $name );
+        $ctx->diag( 'Hash contains no entries.' );
     }
     else {
         $ok = $ctx->ok( 1, $name );
